@@ -8,7 +8,6 @@ import sys
 import matplotlib.pyplot as plt
 from tkinter import ttk 
 from PIL import Image, ImageTk
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 class Queue:
     def __init__(self):
@@ -39,8 +38,6 @@ class Queue:
         new_queue = cls()
         new_queue.items = other_queue.items.copy()
         return new_queue
-# fix the visualizTATION TKINTER 
-
 def visualizeMouseMovement(movement_info):
     # Plotting the mouse movement based on the stored information
     for step_info in movement_info:
@@ -71,20 +68,65 @@ def visualizeMouseMovement(movement_info):
     plt.legend()
     plt.show()
 
-# Move the mouse to the initial position and click the mouse then make the shape
-def drawingTime():
+# Move the mouse to the initial position and click the mouse then make the circle
+def drawingTime14():
     print(f"ready: {leftIndex.items} {nums.items} {queue.items}")
     pyautogui.moveTo(x_initial, y_initial)
-
+    time.sleep(2)
     x = x_initial
     y = y_initial
     
     movement_info = []
-
     for j in range(num_steps):   
-        step_info = {'x': x, 'y': y, 'direction': [], 'distance': [], 'leftDist': []}    
-        if j != 0 and math.isclose(x, x_initial, abs_tol=1e-5) and math.isclose(y, y_initial, abs_tol=1e-5):
-            break
+        step_info = {'x': x, 'y': y, 'direction': [], 'distance': [], 'leftDist': []}     
+        for i in range(nums.size()+1):
+
+            print(queue.items.copy())
+            print(nums.items.copy())
+            direction = queue.dequeue()
+            distance = nums.dequeue()
+            if i == 0:
+                leftIndex.enqueue(distance)
+                leftDist = leftIndex.dequeue()
+
+            if (direction =="l"): 
+                x -= leftDist
+                print(f"leftDist: {leftDist}")
+            if (direction == "u"): 
+                y -= distance
+            if (direction == "r"): 
+                x += distance
+            if (direction == "d"): 
+                y+= distance
+            
+            
+            step_info['direction'].append(direction)
+            step_info['distance'].append(distance)
+            step_info['leftDist'].append(leftDist)
+
+            pyautogui.mouseDown()
+            pyautogui.moveTo(x, y)
+            # print(f"Step {i+1}, Direction: {direction}, Distance: {distance} leftDist: {leftDist}")
+            nums.enqueue(distance)
+            queue.enqueue(direction)
+
+
+        movement_info.append(step_info)
+        print("Loop Done")
+
+    pyautogui.mouseUp()
+    visualizeMouseMovement(movement_info)
+
+def drawingTime():
+    print(f"ready: {leftIndex.items} {nums.items} {queue.items}")
+    pyautogui.moveTo(x_initial, y_initial)
+    time.sleep(2)
+    x = x_initial
+    y = y_initial
+    
+    movement_info = []
+    for j in range(num_steps):   
+        step_info = {'x': x, 'y': y, 'direction': [], 'distance': [], 'leftDist': []}     
         for i in range(nums.size()+1):
 
             print(queue.items.copy())
@@ -120,11 +162,12 @@ def drawingTime():
             step_info['distance'].append(distance)
             step_info['leftDist'].append(leftDist)
 
-            # pyautogui.mouseDown()
-            # pyautogui.moveTo(x, y)
+            pyautogui.mouseDown()
+            pyautogui.moveTo(x, y)
             # print(f"Step {i+1}, Direction: {direction}, Distance: {distance} leftDist: {leftDist}")
             nums.enqueue(distance)
             queue.enqueue(direction)
+
 
         movement_info.append(step_info)
         print("Loop Done")
@@ -132,20 +175,6 @@ def drawingTime():
     pyautogui.mouseUp()
     visualizeMouseMovement(movement_info)
 
-def add_num(event = None):
-    num = int(entry.get()) * 10
-    nums.enqueue(num)
-    listbox.insert(tk.END, num) 
-    entry.delete(0, tk.END)
-
-def clear_list():
-    listbox.delete(0, tk.END)
-    nums.items = []
-
-def remove_last_input():
-    if nums.size() > 0:
-        listbox.delete(tk.END)
-        nums.dequeue()
 
 # Create the queue 
 queue = Queue()
@@ -158,48 +187,39 @@ queue.enqueue("r")
 queue.enqueue("d")
 queue.enqueue("l")
 
-# Ui stuff
+nums.enqueue(10)
+nums.enqueue(30)
+nums.enqueue(20)
+nums.enqueue(40)
+nums.enqueue(50)
+nums.enqueue(60)
+nums.enqueue(70)
+nums.enqueue(80)
+nums.enqueue(90)
+
+
+
+
 win = tk.Tk()
-win.geometry("500x550")
+win.geometry("250x275")
 win.title("SPIRAL")
-
-
 script_directory = os.path.dirname(os.path.abspath(sys.argv[0]))   
 imagedir = f"button.png"
 original_image = Image.open(imagedir)
 photo = ImageTk.PhotoImage(original_image)
+ttk.Button(win, text="Click Here", image = photo, command=drawingTime).pack(pady=20)
 
-# Listbox to display nums
-listbox = tk.Listbox(win)
-listbox.pack(pady=25)
 
-# Entry for user input
-entry = tk.Entry(win)
-entry.pack(pady=5)
-
-# Buttons to add nums to the list and initiate drawingTime
-add_button = tk.Button(win, text="Add Num", command=add_num)
-add_button.pack(side='left', padx=10, pady=5)
-entry.bind("<Return>", add_num)
-
-# Button to initiate drawingTime
-initiate_button = ttk.Button(win, text="Start Drawing", command=lambda: drawingTime())
-initiate_button.pack(side='left', padx=10, pady=20)
-
-# Buttons for clearing the list and removing the last input
-clear_button = tk.Button(win, text="Clear List", command=clear_list)
-clear_button.pack(side='left', padx=10, pady=5)
-
-remove_last_button = tk.Button(win, text="Remove Last Input", command=remove_last_input)
-remove_last_button.pack(side='left', padx=10, pady=5)
 
 #actual program
 width, height = pyautogui.size()
 center_x, center_y = width/2, (height/2)+20 # +20 to account for the taskbar
 num_steps = 10
 
+
+
 # Calculate the initial position
 x_initial = center_x 
 y_initial = center_y 
 
-win.mainloop()
+win.mainloop() 
