@@ -41,6 +41,8 @@ class Queue:
         return new_queue
 # fix the visualizTATION TKINTER 
 
+if __name__ == '__main__':
+    pass 
 def visualizeMouseMovement(movement_info):
     # Plotting the mouse movement based on the stored information
     for step_info in movement_info:
@@ -63,7 +65,7 @@ def visualizeMouseMovement(movement_info):
             x_positions.append(step_info['x'])
             y_positions.append(step_info['y'])
 
-        plt.plot(x_positions, y_positions, marker='o', linestyle='-', label=f'Step {movement_info.index(step_info) + 1}')
+        plt.plot(x_positions, y_positions, marker='o', linestyle='-')
 
     plt.title('Mouse Movement')
     plt.xlabel('X Position')
@@ -80,15 +82,19 @@ def drawingTime():
     y = y_initial
     
     movement_info = []
+    steps = 0 
+    drawing = True
 
-    for j in range(num_steps):   
+    while drawing:
+        if(nums.size() % 2 ==0):
+            if steps == 100:
+                drawing = False
+        steps += 1
         step_info = {'x': x, 'y': y, 'direction': [], 'distance': [], 'leftDist': []}    
-        if j != 0 and math.isclose(x, x_initial, abs_tol=1e-5) and math.isclose(y, y_initial, abs_tol=1e-5):
-            break
+        if (steps > 2 and math.isclose(x, x_initial, abs_tol=1e-5) and math.isclose(y, y_initial, abs_tol=1e-5)):
+            drawing = False
+        
         for i in range(nums.size()+1):
-
-            print(queue.items.copy())
-            print(nums.items.copy())
             direction = queue.dequeue()
             distance = nums.dequeue()
             if i == 0:
@@ -107,7 +113,6 @@ def drawingTime():
             else: 
                 if (direction =="l"): 
                     x -= leftDist
-                    print(f"final left : {leftDist}")
                 if (direction == "u"): 
                     y -= distance
                 if (direction == "r"): 
@@ -127,9 +132,8 @@ def drawingTime():
             queue.enqueue(direction)
 
         movement_info.append(step_info)
-        print("Loop Done")
-
-    pyautogui.mouseUp()
+    print(steps)
+    # pyautogui.mouseUp()
     visualizeMouseMovement(movement_info)
 
 def add_num(event = None):
@@ -196,10 +200,10 @@ remove_last_button.pack(side='left', padx=10, pady=5)
 #actual program
 width, height = pyautogui.size()
 center_x, center_y = width/2, (height/2)+20 # +20 to account for the taskbar
-num_steps = 10
 
 # Calculate the initial position
 x_initial = center_x 
 y_initial = center_y 
+
 
 win.mainloop()
