@@ -4,6 +4,7 @@ import pyautogui
 import tkinter as tk
 import os 
 import sys
+import random
 
 import matplotlib.pyplot as plt
 from tkinter import ttk 
@@ -86,7 +87,7 @@ def drawingTime():
     drawing = True
 
     while drawing:
-        if(nums.size() % 2 ==0):
+        if(nums.size() % 2 ==0 or nums.size() == 1):
             if steps == 100:
                 drawing = False
         steps += 1
@@ -136,6 +137,13 @@ def drawingTime():
     # pyautogui.mouseUp()
     visualizeMouseMovement(movement_info)
 
+def add_random(event = None):
+    num = random.randint(1, 10) * 100
+    nums.enqueue(num)
+    listbox.insert(tk.END, num)
+    entry.delete(0, tk.END)
+
+
 def add_num(event = None):
     num = int(entry.get()) * 10
     nums.enqueue(num)
@@ -164,7 +172,7 @@ queue.enqueue("l")
 
 # Ui stuff
 win = tk.Tk()
-win.geometry("500x550")
+win.geometry("550x540")
 win.title("SPIRAL")
 
 
@@ -185,6 +193,14 @@ entry.pack(pady=5)
 add_button = tk.Button(win, text="Add Num", command=add_num)
 add_button.pack(side='left', padx=10, pady=5)
 entry.bind("<Return>", add_num)
+
+add_button = tk.Button(win, text="Add Random", command=add_random)
+add_button.pack(side='left', padx=10, pady=5)
+entry.bind("<Return>", add_num)
+
+add_button = tk.Button(win, text="Random 101", command=add_random)
+add_button.pack(side='left', padx=10, pady=5)
+entry.bind("<Return>", add_num) 
 
 # Button to initiate drawingTime
 initiate_button = ttk.Button(win, text="Start Drawing", command=lambda: drawingTime())
