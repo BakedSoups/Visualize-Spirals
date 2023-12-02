@@ -11,12 +11,16 @@ from tkinter import ttk
 from PIL import Image, ImageTk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
+
 class Queue:
     def __init__(self):
         self.items = []
 
     def is_empty(self):
         return len(self.items) == 0
+
+    def copy(self): 
+        return self.items.copy()
 
     def enqueue(self, item):
         self.items.append(item)
@@ -43,7 +47,18 @@ class Queue:
 # fix the visualizTATION TKINTER 
 
 if __name__ == '__main__':
-    pass 
+    pass
+
+# on a button click
+def openNewWindow():
+    newWindow = Toplevel(master)
+    newWindow.title("Past Shapes")
+    newWindow.geometry("200x200")
+    Label(newWindow,text ="Past Shapes").pack() 
+
+    #load the pattern
+    
+
 def visualizeMouseMovement(movement_info):
     # Plotting the mouse movement based on the stored information
     for step_info in movement_info:
@@ -75,6 +90,9 @@ def visualizeMouseMovement(movement_info):
     plt.show()
 
 # Move the mouse to the initial position and click the mouse then make the shape
+
+def animation(): 
+    pass
 def drawingTime():
     print(f"ready: {leftIndex.items} {nums.items} {queue.items}")
     pyautogui.moveTo(x_initial, y_initial)
@@ -143,7 +161,33 @@ def add_random(event = None):
     listbox.insert(tk.END, num)
     entry.delete(0, tk.END)
 
+def save_pattern():
+# save current queue to a file  
 
+    with open("pattern.txt", "w") as f:
+        f.write(str(nums.items))
+        f.write("\n")
+        f.write(str(queue.items))
+        f.write("\n")
+        f.write(str(leftIndex.items))
+        f.write("\n")
+        f.write(str(x_initial))
+        f.write("\n")
+        f.write(str(y_initial))
+        f.write("\n")
+        f.write(str(center_x))
+        f.write("\n")
+        f.write(str(center_y))
+        f.write("\n")
+        f.write(str(width))
+        f.write("\n")
+        f.write(str(height))
+        f.write("\n")
+        for i in range(leftIndex.size()):
+            f.write(str(leftIndex.items[i]))
+            f.write("\n")
+     
+    
 def add_num(event = None):
     num = int(entry.get()) * 10
     nums.enqueue(num)
@@ -194,24 +238,32 @@ add_button = tk.Button(win, text="Add Num", command=add_num)
 add_button.pack(side='left', padx=10, pady=5)
 entry.bind("<Return>", add_num)
 
+# Button to add random number to the list  
 add_button = tk.Button(win, text="Add Random", command=add_random)
 add_button.pack(side='left', padx=10, pady=5)
 entry.bind("<Return>", add_num)
-
-add_button = tk.Button(win, text="Random 101", command=add_random)
-add_button.pack(side='left', padx=10, pady=5)
-entry.bind("<Return>", add_num) 
 
 # Button to initiate drawingTime
 initiate_button = ttk.Button(win, text="Start Drawing", command=lambda: drawingTime())
 initiate_button.pack(side='left', padx=10, pady=20)
 
+#Button to open a see past Shapes 
+past_button = ttk.Button(win, text="Past Shapes", command=lambda: openNewWindow()) 
+past_button.pack(side='left', padx=10, pady=20) 
+
+
 # Buttons for clearing the list and removing the last input
 clear_button = tk.Button(win, text="Clear List", command=clear_list)
 clear_button.pack(side='left', padx=10, pady=5)
 
+#Remove Last Input  
 remove_last_button = tk.Button(win, text="Remove Last Input", command=remove_last_input)
 remove_last_button.pack(side='left', padx=10, pady=5)
+
+#save pattern
+save_pattern_button = tk.Button(win, text="Save Pattern", command=save_pattern) 
+save_pattern_button.pack(side='right', padx=10, pady=5) 
+
 
 #actual program
 width, height = pyautogui.size()
