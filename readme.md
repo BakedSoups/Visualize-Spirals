@@ -23,6 +23,6 @@ with this you can visualise some pretty cool spirals ![complexpatern](https://gi
 Table: 
 ![table](https://github.com/BakedSoups/Visualize-Spirals/assets/97857268/937177cf-ae01-4f02-94b7-6a4a703b0ef0)
 
-Visualization
+Visualization:
 ![StandardOddpattern](https://github.com/BakedSoups/Visualize-Spirals/assets/97857268/f23beb0a-19e0-4966-ab7f-decf7d574be0)
 
