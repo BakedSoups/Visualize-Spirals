@@ -10,7 +10,7 @@ there are scratch projects that visualize this:
  
 However they are very limited in terms of the amount of movements you can take and in terms of efficiency so I scaled it up with matplotlib and python3 
 
-with this you can visualise some pretty cool spirals ![complexpatern](https://github.com/BakedSoups/Visualize-Spirals/assets/97857268/882fa8dc-c923-406b-8ad5-b13a1bb504a9)
+with this you can visualise some pretty cool spirals: ![complexpatern](https://github.com/BakedSoups/Visualize-Spirals/assets/97857268/882fa8dc-c923-406b-8ad5-b13a1bb504a9)
 
 ## To run on you system
 1. Clone the repo
